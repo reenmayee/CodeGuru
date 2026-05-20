@@ -7,7 +7,7 @@
 **CodeGuru** is a beginner-friendly AI-powered coding assistant.  
 It helps new programmers understand, debug, and optimize code across multiple languages in real time.  
 
-Paste your code, select a language, and let CodeGuru do the heavy lifting!
+Paste your code, select a language, and let CodeGuru do the heavy lifting!!
 
 ## ✨ Features
 
