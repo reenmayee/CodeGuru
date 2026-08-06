@@ -41,6 +41,15 @@ Explain the following {language} code in very simple language.
 
 Do NOT repeat the code.
 
+IMPORTANT:
+- Respond in plain text only.
+- Do NOT use Markdown.
+- Do NOT use headings (#).
+- Do NOT use bold (**).
+- Do NOT use bullet points.
+- Do NOT use code fences (```).
+- Use short paragraphs.
+
 Explain:
 • What the code does
 • How it works
