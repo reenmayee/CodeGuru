@@ -3,4 +3,4 @@ flask-cors
 requests
 python-dotenv
 gunicorn
-google-generativeai==0.8.5
+google-genai
