@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import google.generativeai as genai
+from google import genai
 import os
 from dotenv import load_dotenv
 
@@ -9,11 +9,9 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY not found.")
+    raise ValueError("GEMINI_API_KEY not found!")
 
-genai.configure(api_key=GEMINI_API_KEY)
-
-model = genai.GenerativeModel("gemini-2.5-flash")
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 app = Flask(__name__)
 CORS(app)
@@ -21,7 +19,7 @@ CORS(app)
 
 @app.route("/")
 def home():
-    return "CodeGuru Backend Running!"
+    return jsonify({"message": "CodeGuru Backend Running!"})
 
 
 @app.route("/review", methods=["POST"])
@@ -38,10 +36,9 @@ def review_code():
 
         if action == "explain":
             prompt = f"""
-Explain the following {language} code in simple English.
-Do NOT repeat the code.
-Use beginner-friendly language.
-Give a simple example.
+Explain the following {language} code in simple beginner-friendly language.
+Do not repeat the code.
+Give an example if possible.
 
 Code:
 {code}
@@ -49,11 +46,11 @@ Code:
 
         elif action == "debug":
             prompt = f"""
-Debug this {language} code.
+Debug the following {language} code.
 
 Return:
 1. Corrected code.
-2. Explain every bug you fixed.
+2. Explain each bug.
 
 Code:
 {code}
@@ -61,7 +58,7 @@ Code:
 
         elif action == "optimize":
             prompt = f"""
-Optimize this {language} code.
+Optimize the following {language} code.
 
 Return:
 1. Optimized code.
@@ -74,7 +71,10 @@ Code:
         else:
             return jsonify({"error": "Invalid action"}), 400
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+        )
 
         return jsonify({
             "result": response.text
@@ -88,4 +88,4 @@ Code:
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
