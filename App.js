@@ -14,7 +14,7 @@ function App() {
   try {
     setOutput("Loading...");
 
-    const response = await fetch("https://codeguru-xz8t.onrender.com", {
+    const response = await fetch("https://codeguru-xz8t.onrender.com/review", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
