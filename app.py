@@ -5,14 +5,11 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
 if not GEMINI_API_KEY:
     raise Exception("GEMINI_API_KEY not found!")
 
 client = genai.Client(api_key=GEMINI_API_KEY)
-
 app = Flask(__name__)
 CORS(app)
 
@@ -24,10 +21,8 @@ def home():
 
 @app.route("/review", methods=["POST"])
 def review():
-
     try:
         data = request.get_json()
-
         code = data.get("code", "")
         language = data.get("language", "javascript")
         action = data.get("action", "explain")
@@ -38,9 +33,7 @@ def review():
         if action == "explain":
             prompt = f"""
 Explain the following {language} code in very simple language.
-
 Do NOT repeat the code.
-
 IMPORTANT:
 - Respond in plain text only.
 - Do NOT use Markdown.
@@ -49,45 +42,55 @@ IMPORTANT:
 - Do NOT use bullet points.
 - Do NOT use code fences (```).
 - Use short paragraphs.
-
 Explain:
-• What the code does
-• How it works
-• Give a simple example
-
+- What the code does
+- How it works
+- Give a simple example
 Code:
-
 {code}
 """
-
         elif action == "debug":
             prompt = f"""
-Debug this {language} code.
-
-Return:
-
-1. Corrected code
-2. Explain each bug you fixed
-
+You are an expert software engineer.
+Debug the following {language} code.
+IMPORTANT:
+- Respond in plain text only.
+- Do NOT use Markdown.
+- Do NOT use headings (#).
+- Do NOT use bold (**).
+- Do NOT use bullet points.
+- Do NOT use code fences (```).
+First show ONLY the corrected code.
+Leave one blank line.
+Then explain:
+- What the bugs were.
+- Why they occurred.
+- How they were fixed.
+Use simple paragraphs.
 Code:
-
 {code}
 """
-
         elif action == "optimize":
             prompt = f"""
-Optimize this {language} code.
-
-Return:
-
-1. Optimized code
-2. Explain every optimization
-
+You are an expert software engineer.
+Optimize the following {language} code.
+IMPORTANT:
+- Respond in plain text only.
+- Do NOT use Markdown.
+- Do NOT use headings (#).
+- Do NOT use bold (**).
+- Do NOT use bullet points.
+- Do NOT use code fences (```).
+First show ONLY the optimized code.
+Leave one blank line.
+Then explain:
+- What was optimized.
+- Why it is faster or cleaner.
+- Any time or space complexity improvements.
+Use simple paragraphs.
 Code:
-
 {code}
 """
-
         else:
             return jsonify({"error": "Invalid action"}), 400
 
